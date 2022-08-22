@@ -35,8 +35,8 @@ else:
     ALLOWED_HOSTS = ['127.0.0.1', "localhost", "0.0.0.0", '192.168.0.3', '192.168.68.61']
 
 # SECURITY WARNING: don't run with debug turned on in production!
-if not IS_HEROKU:
-    DEBUG = True
+# if not IS_HEROKU:
+DEBUG = True
 
 # Application definition
 
