@@ -21,7 +21,6 @@ class Tarjeta(models.Model):
         MASTERCARD = 'MASTERCARD', "Mastercard"
         AMEX = 'AMEX', "American Express"
 
-    id = models.IntegerField(primary_key=True, editable=False)
     customer = models.ForeignKey(User, on_delete=models.CASCADE)
     type = models.CharField(
         max_length=1,
