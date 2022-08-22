@@ -1,19 +1,21 @@
 {% extends 'side-bar-layout.html' %}
 
 {% block content %}
-    <main>
-        <section>
-            <div class="d-flex align-items-center justify-content-center">
+    <main class="my-5 py-xl-5">
+        <div class="container-fluid">
+            <section id="loan-form">
                 <div
                         id="card"
                         class="card container p-3 mx-auto bg-light my-auto mx-auto"
                         style="max-width: max-content"
                 >
                     <div class="card-body text-center">
+                        <!-- Header -->
                         <h3>Loans</h3>
                         <h4 class="card-title text-center mb-3">
                             Pre-Approved
                         </h4>
+                        <!-- Lead comment -->
                         <p>
                             Being a
                             <b>{{ customer.get_type_display }}</b>
@@ -30,10 +32,9 @@
                                             id="datePicker"
                                             class="form-control {% if error %} is-invalid{% endif %} "
                                             name="date"
-                                            placeholder="mm/dd/yyyy"
                                             required
                                     />
-                                    <label class="form-label" for="amountInput">Date</label>
+                                    <label class="form-label" for="datePicker">Date</label>
                                 </div>
 
                                 <!-- Amount Input -->
@@ -54,8 +55,9 @@
                                 </div>
 
                                 <!-- Loan Type Select -->
-                                <div class="form-outline mb-5">
+                                <div class="mb-5">
                                     <select class="form-select"
+                                            id="typeSelect"
                                             name="type"
                                             aria-label="Select"
                                             required
@@ -65,6 +67,7 @@
                                         {% endfor %}
                                     </select>
                                 </div>
+
                                 <!-- Submit In Button -->
                                 <div class="text-center w-auto">
                                     <button
@@ -78,8 +81,8 @@
                         </div>
                     </div>
                 </div>
-            </div>
-        </section>
+            </section>
+        </div>
     </main>
 {% endblock %}
 
