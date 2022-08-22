@@ -10,7 +10,6 @@ from django.shortcuts import render, redirect
 # Create your views here.
 from cliente.models import Cliente
 from cliente.views import fill_navbar_style
-from cuentas.models import Cuenta
 from .models import Prestamo
 
 
@@ -61,11 +60,6 @@ def new_loan(request: WSGIRequest) -> HttpResponse:
     date = datetime.strptime(request.POST['date'], '%Y-%m-%d')
     loan = Prestamo(customer=customer, type=loan_type, total=loan_amount, date=date)
     loan.save()
-
-    # Update account balance
-    account = Cuenta.objects.get(customer=user, type=Cuenta.AccountType.SAVINGS.value)
-    account.balance += loan_amount
-    account.save()
 
     messages.success(request, 'Loan granted.')
 

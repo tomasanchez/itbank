@@ -1,8 +1,11 @@
 from datetime import datetime
 
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 from cliente.models import Cliente
+from cuentas.models import Transaction, Cuenta
 
 
 # Create your models here.
@@ -44,3 +47,19 @@ class Prestamo(models.Model):
                 return 500_000.00
             case _:
                 return 0.00
+
+
+@receiver(post_save, sender=Prestamo)
+def create_transaction(sender, instance, created, **kwargs):
+    if created:
+        # Update account balance
+        savings_account = instance.customer.user.cuenta_set.get(type=Cuenta.AccountType.SAVINGS.value)
+        if savings_account is not None:
+            savings_account.balance += instance.total
+            savings_account.save()
+            transaction = Transaction(
+                account=savings_account,
+                operation=Transaction.OperationType.DEPOSIT.value,
+                amount=instance.total,
+            )
+            transaction.save()

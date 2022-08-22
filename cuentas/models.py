@@ -1,3 +1,4 @@
+import datetime
 import locale
 import uuid
 
@@ -8,6 +9,7 @@ from django.dispatch import receiver
 from schwifty import IBAN
 
 from cliente.models import Cliente
+from .accounts_util import generate_alias
 
 
 def account_id_generator() -> str:
@@ -41,6 +43,7 @@ class Cuenta(models.Model):
                             default="-",
                             )
     balance = models.FloatField(default=0.0)
+    alias = models.CharField(max_length=200, default=generate_alias)
 
     class Meta:
         db_table = 'CUENTAS'
@@ -58,6 +61,35 @@ class Cuenta(models.Model):
             return f"US{locale.currency(self.balance, grouping=True)}"
         else:
             return locale.currency(self.balance, grouping=True)
+
+
+class Transaction(models.Model):
+    class OperationType(models.TextChoices):
+        DEPOSIT = 'DE', 'Deposit'
+        WITHDRAW = 'WI', 'Withdraw'
+        TRANSFER = 'TR', 'Transfer'
+
+    account = models.ForeignKey(Cuenta, on_delete=models.CASCADE)
+    operation = models.CharField(choices=OperationType.choices, max_length=2)
+    amount = models.FloatField()
+    date = models.DateTimeField(default=datetime.date.today, editable=False)
+
+    class Meta:
+        db_table = 'MOVIMIENTOS'
+
+    def __str__(self):
+        return f"{self.balance_currency()}\t" \
+               f"({self.get_operation_display()} {datetime.date.strftime(self.date, '%m/%d/%y')})"
+
+    def balance_currency(self) -> str:
+        """
+            Return the balance of the account in a string format.
+        """
+        locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
+        if self.account.type == Cuenta.AccountType.SAVINGS_USD.value:
+            return f"US{locale.currency(self.amount, grouping=True)}"
+        else:
+            return locale.currency(self.amount, grouping=True)
 
 
 @receiver(post_save, sender=Cuenta)
