@@ -50,7 +50,55 @@
                             {% endif %}
                         </div>
                         <a href="#" class="card-link">See Movements</a>
-                        <a href="#" class="card-link text-no-break">Consult Alias</a>
+
+                        <!-- Button trigger modal -->
+                        <a href="#" class="card-link text-no-break"
+                           data-mdb-toggle="modal"
+                           data-mdb-target="#aliasModal"
+                        >
+                            Consult Alias
+                        </a>
+
+                        <!-- Modal -->
+                        <div class="modal fade" id="aliasModal" tabindex="-1" aria-labelledby="aliasModalLabel"
+                             aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="aliasModalLabel">
+                                            {{ account.iban }}
+                                            ({{ account.get_type_display }})
+                                        </h5>
+                                        <button type="button" class="btn-close" data-mdb-dismiss="modal"
+                                                aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="container-fluid">
+                                            <form id="splitExpensesForm" method="post">
+                                                <!-- Name input -->
+                                                <div class="form-outline mb-4">
+                                                    <input
+                                                            type="text"
+                                                            id="nameInput"
+                                                            class="form-control form-control-lg"
+                                                            name="name"
+                                                            placeholder="{{ user.last_name }}-savings"
+                                                            value="{{ account.alias }}"
+                                                            readonly
+                                                    />
+                                                    <label class="form-label" for="nameInput">Alias*</label>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-light" data-mdb-dismiss="modal">Close
+                                        </button>
+                                        <button type="button" class="btn btn-primary disabled">Save changes</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
