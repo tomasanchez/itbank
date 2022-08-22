@@ -21,6 +21,5 @@ pip install -r requirements.txt
 Run the application
 
 ```bash
-cd homebanking/
 python3 manage.py runserver
 ```

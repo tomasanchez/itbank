@@ -1,1 +1,1 @@
-web: gunicorn homebanking.wsgi
+web: gunicorn homebanking.wsgi --log-file -
