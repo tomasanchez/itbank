@@ -7,7 +7,7 @@ __pycache__/
 *.so
 
 # Migrations
-**/migrations/**
+**/migrations/0*
 
 # Static
 staticfiles
