@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}Recover Password{% endblock %}
+
+{% block body-tag %}
+    style="
+    background: url({% static "homebanking/images/andrea-cau-nV7GJmSq3zc-unsplash.jpg" %});
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 100vh;
+    "
+    class="d-flex flex-column"
+{% endblock %}
+
+{% block main %}
+    <main class="mt-auto">
+        <section>
+            <div
+                    id="card"
+                    class="card container p-3 mx-auto"
+                    style="max-width: fit-content"
+            >
+                <div class="card-body text-center">
+                    <a class="text-dark" href="{% url 'home' %}">
+                        <h3>ITBANK</h3>
+                    </a>
+                    <h4 class="card-title text-muted mb-4">Reset password</h4>
+                    <div class="card-text">
+                        <form>
+                            <div class="form-group mb-4">
+                                <div class="form-outline">
+                                    <input
+                                            type="email"
+                                            id="emailReset"
+                                            class="form-control"
+                                            placeholder="your@mail"
+                                            required
+                                    />
+                                    <label class="form-label" for="typeEmail">Email*</label>
+                                </div>
+                                <div id="textExample1" class="form-text">
+                                    We will send you a link to reset your password.
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-block mb-3">
+                                Reset Password
+                            </button>
+                        </form>
+                        <div class="text-center">
+                            <a href="{% url 'login' %}" class="mt-4">Log In</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+{% endblock %}

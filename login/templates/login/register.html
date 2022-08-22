@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}Sign Up{% endblock %}
+
+{% block body-tag %}
+    style="
+    background: url({% static "homebanking/images/andrea-cau-nV7GJmSq3zc-unsplash.jpg" %});
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 100vh;
+    "
+    class="d-flex flex-column"
+{% endblock %}
+
+{% block main %}
+    <main class="mt-auto">
+        <section>
+            <div
+                    id="card"
+                    class="card container p-3 mx-auto"
+                    style="max-width: max-content"
+            >
+                <div class="card-body text-center">
+                    <a class="text-dark" href="{% url 'home' %}">
+                        <h3>ITBANK</h3>
+                    </a>
+                    <h4 class="card-title text-center mb-3 text-muted">
+                        Online Banking
+                    </h4>
+                    <div class="card-text">
+                        <form class="mt-0" method="POST">
+                            {% csrf_token %}
+
+                            <!-- Username Input -->
+                            <div class="form-outline mb-2">
+                                {{ form.username }}
+                                <label class="form-label" for="id_username">{{ form.username.label }}*</label>
+                            </div>
+
+                            <!-- Name Input -->
+                            <div class="form-outline mb-2">
+                                {{ form.first_name }}
+                                <label class="form-label" for="id_first_name">{{ form.first_name.label }}*</label>
+                            </div>
+
+                            <!-- Last Name Input -->
+                            <div class="form-outline mb-2">
+                                {{ form.last_name }}
+                                <label class="form-label" for="id_last_name">{{ form.last_name.label }}*</label>
+                            </div>
+
+                            <!-- Last Name Input -->
+                            <div class="form-outline mb-2">
+                                {{ form.dni }}
+                                <label class="form-label" for="id_dni">{{ form.dni.label }}*</label>
+                            </div>
+
+                            <!-- Email Input -->
+                            <div class="form-outline mb-2">
+                                {{ form.email }}
+                                <label class="form-label" for="id_email">{{ form.email.label }}*</label>
+                            </div>
+
+                            <!-- Password Input -->
+                            <div class="form-outline mb-2">
+                                {{ form.password1 }}
+                                <label class="form-label" for="id_password1">{{ form.password1.label }}*</label>
+                            </div>
+
+                            <!-- Password Confirmation Input -->
+                            <div class="form-outline mb-4">
+                                {{ form.password2 }}
+                                <label class="form-label" for="id_password2">{{ form.password2.label }}*</label>
+                            </div>
+
+                            <!-- Submit Button -->
+                            <div class="text-center w-auto">
+                                <button
+                                        type="submit"
+                                        class="btn btn-primary btn-lg w-100  mb-3"
+                                >
+                                    Sign Up
+                                </button>
+                            </div>
+
+                            <!-- Navigations -->
+                            <div
+                                    class="container-fluid align-content-start text-start mb-2"
+                            >
+                                <a href="{% url 'login' %}">Already have an account? Sign In.</a>
+                                <br/>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+{% endblock %}
+
+{% block JS %}
+{% endblock %}

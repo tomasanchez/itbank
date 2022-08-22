@@ -1,0 +1,129 @@
+{% extends 'side-bar-layout.html' %}
+
+{% load static %}
+
+{% block content %}
+    <main>
+        <div class="container-fluid">
+            <section id="my-accounts">
+                <div class="shadow py-2 bg-body rounded">
+                    <!-- Cards List -->
+                    <div class="container overflow-auto" style="max-height: 100vh;">
+                        <ul class="list-group list-group-light mt-2 p-2" id="cardsList">
+                            <!-- List Header -->
+                            <div class="p-2 bg-body rounded-top">
+                                <h3 class="text-center d-inline-block">
+                                    My Cards
+                                    (
+                                    <span class="fw-bold text-dark"
+                                          id="noOfFriends">
+                                            {{ cards|length }}
+                                        </span>
+                                    )
+                                </h3>
+                            </div>
+                            {% if cards %}
+                                <!-- Card Items -->
+                                {% for card in cards %}
+                                    <li class="list-group-item d-flex justify-content-center align-items-center">
+                                        <div class="row">
+                                            <div class="col">
+                                                <div class="d-flex align-items-center {{ styles.cards_color }}
+                                                            p-3 rounded-5
+                                                            max-auto hover-overlay ripple ripple-surface-light"
+                                                     data-mdb-ripple-color="light"
+                                                     style="width:19rem; max-width: 100%;">
+                                                    <img src="{% static 'homebanking/icons' %}/{{ card.logo }}"
+                                                         alt="{{ card.get_brand_display }}"
+                                                         style="width: 50px; height: 50px"
+                                                         class="rounded {{ styles.card_svg }}"/>
+                                                    <div class="ms-3">
+                                                        <h3 class="fw-bold mb-1 user-select-none">
+                                                            {{ card.get_brand_display }}
+                                                        </h3>
+                                                        {% if card.type == 'D' %}
+                                                            <h5 class="fw-lighter mb-1 ms-2 user-select-none">
+                                                                {{ card.get_type_display }}
+                                                            </h5>
+                                                        {% endif %}
+                                                        <p class="text-muted mb-0 user-select-none"
+                                                           id="{{ card.id }}-hide">
+                                                            {{ card }}
+                                                        </p>
+                                                        <p class="mb-2 lead d-none user-select-all"
+                                                           id="{{ card.id }}-show">{{ card.display_number }}
+                                                        </p>
+                                                        <label class="float-end user-select-none"
+                                                               for="{{ card.id }}-cvv">
+                                                            <span class="small text-muted">Valid End:</span>
+                                                            <span class="fw-lighter me-5"
+                                                                  id="{{ card.id }}-expiration-hidden">
+                                                                --/--
+                                                            </span>
+                                                            <span class="fw-lighter me-3 d-none"
+                                                                  id="{{ card.id }}-expiration-shown">{{ card.display_expiration }}
+                                                            </span>
+                                                        </label>
+                                                        <input class="form-control-plaintext form-control-lg
+                                                                        fs-6 mt-0 me-auto
+                                                                        w-25
+                                                                      "
+                                                               id="{{ card.id }}-cvv"
+                                                               value="{{ card.cvv }}"
+                                                               readonly
+                                                               type="password"
+                                                               disabled/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- Details button -->
+                                            <div class="col text-center align-items-center justify-content-center my-auto">
+                                                <a class="btn btn-link btn-rounded btn-sm mx-auto my-2"
+                                                   onclick="onDetails({{ card.id }})"
+                                                   role="button">
+                                                    Show/Hide Details
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </li>
+                                {% endfor %}
+                            {% else %}
+                                <p class="text-center text-muted" id="no-data-text">
+                                    No Cards were found.
+                                </p>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+{% endblock %}
+
+{% block JS %}
+    <script>
+        onDetails = (id) => {
+            let card_number_private = document.getElementById(`${id}-hide`),
+                card_cvv = document.getElementById(`${id}-cvv`),
+                card_number = document.getElementById(`${id}-show`),
+                expiration_shown = document.getElementById(`${id}-expiration-shown`),
+                expiration_hidden = document.getElementById(`${id}-expiration-hidden`);
+
+            const isShown = card_cvv.getAttribute("type") === "text";
+
+            if (isShown) {
+                card_cvv.setAttribute("type", "password");
+                card_number.classList.add("d-none");
+                card_number_private.classList.remove("d-none");
+                expiration_hidden.classList.remove("d-none");
+                expiration_shown.classList.add("d-none");
+            } else {
+                card_cvv.setAttribute("type", "text");
+                card_number.classList.remove("d-none")
+                card_number_private.classList.add("d-none")
+                expiration_hidden.classList.add("d-none");
+                expiration_shown.classList.remove("d-none");
+            }
+        }
+    </script>
+{% endblock %}

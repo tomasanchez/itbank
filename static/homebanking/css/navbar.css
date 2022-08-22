@@ -1,0 +1,28 @@
+.header-navigation {
+  -webkit-transition: none;
+  -o-transition: none;
+  transition: none;
+  color: #252c33;
+  font-size: 14px;
+  line-height: 20px;
+  text-decoration: none;
+}
+
+.header-navigation-active {
+  border-bottom: 2px solid #0b6ef7;
+  color: #101820;
+}
+
+.header-navigation-disabled {
+  color: #5c5e61;
+}
+
+
+.dark-mode {
+  background-color: black;
+  color: white;
+}
+.light-mode {
+  background-color: white;
+  color: black;
+}

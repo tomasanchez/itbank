@@ -1,0 +1,99 @@
+{% extends 'side-bar-layout.html' %}
+
+{% block content %}
+    <main>
+        <section>
+            <div class="d-flex align-items-center justify-content-center">
+                <div
+                        id="card"
+                        class="card container p-3 mx-auto bg-light my-auto mx-auto"
+                        style="max-width: max-content"
+                >
+                    <div class="card-body text-center">
+                        <h3>Loans</h3>
+                        <h4 class="card-title text-center mb-3">
+                            Pre-Approved
+                        </h4>
+                        <p>
+                            Being a
+                            <b>{{ customer.get_type_display }}</b>
+                            customer your pre-approved loan is of up to
+                            <b>{{ loan_currency }}</b>
+                        </p>
+                        <div class="card-text">
+                            <form class="mt-0" method="POST">
+                                {% csrf_token %}
+
+                                <div class="form-outline mb-4">
+                                    <input
+                                            type="date"
+                                            id="datePicker"
+                                            class="form-control {% if error %} is-invalid{% endif %} "
+                                            name="date"
+                                            placeholder="mm/dd/yyyy"
+                                            required
+                                    />
+                                    <label class="form-label" for="amountInput">Date</label>
+                                </div>
+
+                                <!-- Amount Input -->
+                                <div class="form-outline mb-4">
+                                    <input
+                                            type="number"
+                                            id="amountInput"
+                                            class="form-control {% if error %} is-invalid{% endif %} "
+                                            name="amount"
+                                            placeholder="{{ loan_currency }}"
+                                            min="0.0"
+                                            step="any"
+                                            max="{{ max_loan }}"
+                                            required
+                                    />
+                                    <label class="form-label" for="amountInput">Amount</label>
+                                    <div class="invalid-feedback">{{ error }}</div>
+                                </div>
+
+                                <!-- Loan Type Select -->
+                                <div class="form-outline mb-5">
+                                    <select class="form-select"
+                                            name="type"
+                                            aria-label="Select"
+                                            required
+                                    >
+                                        {% for loan_type in loan_types %}
+                                            <option value="{{ loan_type.value }}">{{ loan_type.label }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <!-- Submit In Button -->
+                                <div class="text-center w-auto">
+                                    <button
+                                            type="submit"
+                                            class="btn btn-primary btn-lg w-100 mb-3 active"
+                                    >
+                                        Submit
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+{% endblock %}
+
+{% block JS %}
+    <script>
+        initDatePicker = () => {
+            let datePicker = document.getElementById('datePicker'),
+                today = new Date();
+            datePicker.valueAsDate = today;
+            datePicker.min = today.toLocaleDateString('en-ca');
+        }
+
+        (function onInit() {
+            initDatePicker();
+        })();
+    </script>
+{% endblock %}

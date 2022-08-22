@@ -1,0 +1,492 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}Home{% endblock %}
+
+{% block header %}
+    {% include 'includes/home-header.html' %}
+{% endblock %}
+
+
+{% block main %}
+    <main class="container-fluid bg-body">
+        <!-- Main Hero Landing -->
+        <section id="welcome">
+            <div class="row bg-blue align-items-center">
+                <!-- Open an account Column -->
+                <div class="col text-center py-5">
+                    {% if user.is_authenticated %}
+                        <h2 class="display-3">Welcome {{ user.last_name }}, {{ user.first_name }}!</h2>
+                        <p class="lead">
+                            Consider the benefits of having ITBANK Online Advantage® Banking.
+                        </p>
+                        <a
+                                type="submit"
+                                class="btn btn-light btn-lg"
+                                id="btn-signup"
+                                href="{% url 'me' %}"
+                        >
+                            Home-Banking
+                        </a>
+                    {% else %}
+                        <h2 class="display-3">New ITBANK Checking customers</h2>
+                        <p class="lead">
+                            Consider the benefits of opening a ITBANK Total Advantage® Banking
+                            Account.
+                        </p>
+                        <a
+                                type="submit"
+                                class="btn btn-success btn-lg bg-green"
+                                id="btn-signup"
+                                href="{% url 'register' %}"
+                        >
+                            Open an account
+                        </a>
+                    {% endif %}
+                </div>
+                <!-- Sign In Column-->
+                {% if user.is_authenticated %}
+                {% else %}
+                    <div class="col-6 d-none d-lg-block py-5 text-black">
+                        <!-- LogIn form-->
+                        <form action="{% url 'login' %}" method="POST">
+                            {% csrf_token %}
+                            <div class="container bg-light py-1 rounded-5 w-50 text-center">
+                                <h1 class="display-5">Welcome</h1>
+                                <!-- Username Input -->
+                                <div class="form-outline mb-2">
+                                    <input
+                                            type="text"
+                                            name="username"
+                                            id="usernameInput"
+                                            class="form-control"
+                                            placeholder="Jh0n.Doe"
+                                            required
+                                    />
+                                    <label class="form-label" for="usernameInput">Username</label>
+                                </div>
+                                <!-- Password Input -->
+                                <div class="form-outline input-group mt-2 mb-5">
+                                    <!-- Show/Hide Password -->
+                                    <input
+                                            type="password"
+                                            name="password"
+                                            id="passwordInput"
+                                            class="form-control {% if error %} is-invalid{% endif %} form-icon-trailing"
+                                    />
+                                    <span class="input-group-text">
+                                    <i id="showPasswordIcon"
+                                       class="fas fa-eye"
+                                       aria-hidden="true"
+                                       onclick="onShowPassword()">
+                                    </i>
+                                </span>
+                                    <label class="form-label" for="passwordInput">Password</label>
+                                    <div class="invalid-feedback">{{ error }}</div>
+                                </div>
+                                <!-- Sign In Button -->
+                                <div class="text-center mt-4">
+                                    <button
+                                            type="submit"
+                                            class="btn btn-primary btn-lg mb-3"
+                                    >
+                                        Sign In
+                                    </button>
+                                </div>
+                                <div
+                                        class="container-fluid text-center align-content-start mb-2"
+                                >
+                                    <a href="{% url 'reset_password' %}" class="nav-link"
+                                    >Forgot username/password?</a
+                                    >
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                {% endif %}
+
+                <div class="w-100"></div>
+            </div>
+        </section>
+        <!-- Main Hero -->
+
+        <!-- Alert -->
+        <section class="row">
+            <div class="alert alert-warning mt-4" role="alert">
+                <div class="container text-center">
+                    <h3>
+                        <i class="fa fa-warning" aria-hidden="true"></i>
+                        Our branches will remain closed on September 26th.
+                    </h3>
+                    <small> Continue banking within our digital channels. </small>
+                </div>
+            </div>
+        </section>
+        <!-- Alert -->
+
+        <!-- Bank Explorer -->
+        <section id="bank-explore">
+            <div class="container-fluid my-4">
+                <nav aria-label="Explore Itbank" class="overflow-auto flex-nowrap">
+                    <ul
+                            class="
+                              pagination
+                              d-table
+                              align-items-center align-text-center
+                              justify-content-center
+                              text-center
+                              mx-auto"
+                    >
+                        <li class="page-item d-table-cell">
+                            <a class="page-link" href="{% url 'register' %}">
+                                <h4><i class="fa-solid fa-wallet"></i></h4>
+                                <h5>Open an Account</h5>
+                            </a>
+                        </li>
+                        <li class="page-item d-table-cell">
+                            <a class="page-link" href="{% url 'my-cards' %}">
+                                <h4><i class="fa-solid fa-credit-card"></i></h4>
+                                <h5>Get a Card</h5>
+                            </a>
+                        </li>
+                        <li class="page-item d-table-cell">
+                            <a class="page-link" href="#">
+                                <h4><i class="fa-solid fa-sack-dollar"></i></h4>
+                                <h5>Credit Salary</h5>
+                            </a>
+                        </li>
+                        <li class="page-item d-table-cell">
+                            <a class="page-link" href="#">
+                                <h4><i class="fa-solid fa-scissors"></i></h4>
+                                <h5>Split Expenses</h5>
+                            </a>
+                        </li>
+                        <li class="page-item d-table-cell">
+                            <a class="page-link" href="{% url 'loans' %}">
+                                <h4><i class="fa-solid fa-hand-holding-dollar"></i></h4>
+                                <h5>Loans</h5>
+                            </a>
+                        </li>
+                        <li class="page-item d-table-cell">
+                            <a class="page-link" href="#">
+                                <h4><i class="fa-solid fa-building-columns"></i></h4>
+                                <h5>Invest</h5>
+                            </a>
+                        </li>
+                        <li class="page-item d-table-cell">
+                            <a class="page-link" href="{% url 'loans' %}">
+                                <h4><i class="fa-solid fa-house-chimney-user"></i></h4>
+                                <h5>Mortgages</h5>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </section>
+        <!-- Bank Explorer -->
+
+        <!--Layout Quotations-->
+        {#        {% include 'includes/cotizaciones.html' %}#}
+        <!--FIN Layout Quotations-->
+
+        <!-- Featured Section -->
+        <section>
+            <div class="bg-light">
+                <div class="container py-4">
+                    <!-- Tangible Benefits Column -->
+                    <div class="row align-items-center text-center">
+                        <div class="col-md-6 mb-2 px-5">
+                            <img
+                                    class="img-responsive img-fluid rounded"
+                                    src="{% static 'homebanking/images/mobile-app.jpg' %}"
+                                    alt="Mobile APP"
+                            />
+                        </div>
+                        <div class="col mb-2 px-5">
+                            <h3>Itbank Mobile app</h3>
+
+                            <b>Stay Connected with Your Money</b>
+                            <p>
+                                Online Banking just got better. Your bank always with you, in
+                                your pocket. The Itbank Mobile app gives you personalized
+                                tools and insights, so you can save, spend and manage your
+                                money with ease.
+                            </p>
+                            <a
+                                    role="button"
+                                    href="{% url 'me' %}"
+                                    class="btn btn-success btn-lg bg-green mt-2"
+                                    id="btn-signup"
+                            >
+                                Get Started
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container py-4">
+                <div
+                        class="row align-items-center text-center flex-column-reverse flex-lg-row"
+                >
+                    <div class="col mb-2">
+                        <div class="container px-5">
+                            <h3>To infinity... and Beyond</h3>
+                            <p>
+                                Get 2.5% interest and give your savings a lift when you open
+                                your first ITBANK High Interest eSavings account.
+                            </p>
+                            <a
+                                    type="submit"
+                                    class="btn btn-success btn-lg bg-green mt-2"
+                                    id="btn-signup"
+                            >
+                                See how
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <img
+                                class="img-responsive img-fluid rounded"
+                                src="{% static 'homebanking/images/to-infinity-and-beyond.jpg' %}"
+                                alt="Interests"
+                        />
+                    </div>
+                </div>
+            </div>
+            <div class="bg-light">
+                <div class="container py-4">
+                    <!-- Tangible Benefits Column -->
+                    <div class="row align-items-center text-center">
+                        <div class="col-md-6 mb-2 px-5">
+                            <img
+                                    class="img-responsive img-fluid rounded"
+                                    style="max-height: 50vh"
+                                    src="{% static 'homebanking/images/clay-banks-POzx_amnWJw-unsplash.jpg' %}"
+                                    alt="Tangible Benefits"
+                            />
+                        </div>
+                        <div class="col mb-2 px-5">
+                            <h3>Turn your goals into action</h3>
+                            <p>
+                                We provided you with an easy way to set and track short- and
+                                long‑term financial goals, get personalized advice when you
+                                need it most and more.
+                            </p>
+                            <a
+                                    type="submit"
+                                    class="btn btn-success btn-lg bg-green mt-2"
+                                    id="btn-signup"
+                            >
+                                Learn More
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Featured Section -->
+
+        <!-- Cards Section -->
+        <section class="py-2">
+            <div class="container">
+                <div class="container-fluid text-center my-5">
+                    <h3 class="display-5">
+                        Financial guidance for every stage of life.
+                    </h3>
+                </div>
+
+                <div class="row row-cols-1 row-cols-md-3 mb-3 mt-2">
+                    <!-- Savings Card-->
+                    <div class="col-sm mb-4">
+                        <div class="card shadow-sm h-70">
+                            <div class="bg-image hover-overlay ripple"
+                                 data-mdb-ripple-color="light"
+                            >
+                                <img
+                                        src="{% static 'homebanking/images/family-savings.jpg' %}"
+                                        class="img-fluid"
+                                        alt="Family Savings"
+                                />
+                                <a href="#">
+                                    <div
+                                            class="mask"
+                                            style="background-color: rgba(251, 251, 251, 0.15)"
+                                    ></div>
+                                </a>
+                            </div>
+                            <div class="card-body">
+                                <h4 class="text-center">
+                                    <i class="fa-solid fa-piggy-bank me-2"></i>Tools that help
+                                    make saving simple
+                                </h4>
+                                <small>
+                                    It’s never too early to begin saving. Open a savings account
+                                    or open a Certificate of Deposit (see interest rates) and
+                                    start saving your money.
+                                </small>
+                            </div>
+                            <div class="card-footer text-muted text-end">
+                                <a class="text-dark" href="#">
+                                    Start saving with Itbank
+                                    <i class="fa-solid fa-arrow-right"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Savings Card-->
+
+                    <!-- Auto Card-->
+                    <div class="col-sm mb-4">
+                        <div class="card shadow-sm h-100">
+                            <div
+                                    class="bg-image hover-overlay ripple"
+                                    data-mdb-ripple-color="light"
+                            >
+                                <img src="{% static 'homebanking/images/auto.jpg' %}"
+                                     class="img-fluid"
+                                     alt="Auto"
+                                />
+                                <a href="#">
+                                    <div
+                                            class="mask"
+                                            style="background-color: rgba(251, 251, 251, 0.15)"
+                                    ></div>
+                                </a>
+                            </div>
+                            <div class="card-body">
+                                <h4 class="text-center">
+                                    <i class="fa-solid fa-car"></i>
+                                    Auto
+                                </h4>
+                                <small>
+                                    Itbank is here to help you get the right car. Apply for auto
+                                    financing for a new or used car with Itbank. Use the payment
+                                    calculator to estimate monthly payments.
+                                </small>
+                            </div>
+                            <div class="card-footer text-muted text-end">
+                                <a class="text-dark" href="#">
+                                    Finance with Itbank Auto
+                                    <i class="fa-solid fa-arrow-right"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Better Banking Card-->
+
+                    <!-- Student Loans -->
+                    <div class="col-sm mb-4">
+                        <div class="card shadow-sm h-100">
+                            <div
+                                    class="bg-image hover-overlay ripple"
+                                    data-mdb-ripple-color="light"
+                            >
+                                <img src="{% static 'homebanking/images/students.jpeg' %}"
+                                     class="img-fluid"
+                                     alt="Students"/>
+                                <a href="#">
+                                    <div
+                                            class="mask"
+                                            style="background-color: rgba(251, 251, 251, 0.15)"
+                                    ></div>
+                                </a>
+                            </div>
+                            <div class="card-body">
+                                <h4 class="text-center">
+                                    <i class="fa-solid fa-graduation-cap"></i>
+                                    Pay off student loans faster
+                                </h4>
+                                <small>
+                                    With the right plan, you can pay off your student loans
+                                    while working toward other long-term financial goals.
+                                </small>
+                            </div>
+                            <div class="card-footer text-muted text-end">
+                                <a class="text-dark" href="#">
+                                    Finance with Itbank Auto
+                                    <i class="fa-solid fa-arrow-right"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Student Loans -->
+                </div>
+            </div>
+
+            <!-- Help Card-->
+            <div class="container mb-3">
+                <div class="card shadow-sm h-100 text-center">
+                    <div class="card-header">
+                        <h4>We're here to help</h4>
+                    </div>
+                    <div class="card-body">
+                        <p class="lead">
+                            We're committed to keeping you informed and providing the
+                            support you need.
+                        </p>
+                        <h5>
+                            <i class="fa-solid fa-circle-question"></i> Need to Connect With
+                            Us?
+                        </h5>
+                        <ul class="list-group list-group-light list-group-small">
+                            <li class="list-group-item">
+                                <i class="fa-solid fa-headphones"></i> Contact Us
+                            </li>
+                            <li class="list-group-item">
+                                <i class="fa-solid fa-money-bills"></i> Find a Branch or ATM
+                            </li>
+                            <li class="list-group-item">
+                                <i class="fa-solid fa-calendar-check"></i> Book an Appointment
+                            </li>
+                            <li class="list-group-item">
+                                <i class="fa-solid fa-credit-card"></i> Dispute a Credit Card
+                                Transaction
+                            </li>
+                            <li class="list-group-item">
+                                <i class="fa-solid fa-money-bill-transfer"></i> Dispute an
+                                ATM/Debit Card Transaction
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="card-footer text-muted text-end">
+                        <a class="text-dark" href="#">
+                            Customer Service
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Cards Section -->
+        <section class="bg-light py-2">
+            <div class="container">
+                <h4>Regret button</h4>
+                <div class="row">
+                    <div class="col">
+                        <p>Did you regret or want to cancel your request?</p>
+                    </div>
+                    <div class="col justify-content-end text-end">
+                        <a class="btn btn-outline-primary btn-rounded">Enter Here</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+{% endblock %}
+
+{% block JS %}
+    <script>
+        onShowPassword = () => {
+            let passwordInput = document.getElementById("passwordInput"),
+                showPasswordIcon = document.getElementById("showPasswordIcon");
+
+            const isShown = passwordInput.getAttribute("type") === "text";
+
+            passwordInput.setAttribute("type", isShown ? "password" : "text");
+
+            showPasswordIcon.classList.remove(isShown ? "fa-eye-slash" : "fa-eye");
+            showPasswordIcon.classList.add(isShown ? "fa-eye" : "fa-eye-slash");
+        };
+    </script>
+{% endblock %}

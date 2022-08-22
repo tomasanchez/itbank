@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %} Sign In{% endblock %}
+
+{% block body-tag %}
+    style="
+    background: url({% static "homebanking/images/andrea-cau-nV7GJmSq3zc-unsplash.jpg" %});
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 100vh;
+    "
+    class="d-flex flex-column"
+{% endblock %}
+
+{% block main %}
+    <main class="mt-auto">
+        <section>
+            <div
+                    id="card"
+                    class="card container p-3 mx-auto"
+                    style="max-width: max-content"
+            >
+                <div class="card-body text-center">
+                    <a class="text-dark" href="{% url 'home' %}">
+                        <h3>ITBANK</h3>
+                    </a>
+                    <h4 class="card-title text-center mb-3 text-muted">
+                        Online Banking
+                    </h4>
+                    <div class="card-text">
+                        <form class="mt-0" method="POST">
+                            {% csrf_token %}
+                            <!-- Username Input -->
+                            <div class="form-outline mb-4">
+                                <input
+                                        type="text"
+                                        id="usernameInput"
+                                        class="form-control {% if error %} is-invalid{% endif %} "
+                                        name="username"
+                                        placeholder="John.D0e"
+                                />
+                                <label class="form-label" for="usernameInput">Username</label>
+                                <div class="invalid-feedback">{{ error }}</div>
+                            </div>
+                            <div class="form-outline input-group mt-2 mb-5">
+                                <!-- Show/Hide Password -->
+
+                                <input
+                                        type="password"
+                                        name="password"
+                                        id="passwordInput"
+                                        class="form-control {% if error %} is-invalid{% endif %} form-icon-trailing"
+                                />
+                                <span class="input-group-text">
+                                    <i id="showPasswordIcon"
+                                       class="fas fa-eye"
+                                       aria-hidden="true"
+                                       onclick="onShowPassword()">
+                                    </i>
+                                </span>
+                                <label class="form-label" for="passwordInput">Password</label>
+                                <div class="invalid-feedback">{{ error }}</div>
+                            </div>
+
+                            <!-- Sign In Button -->
+                            <div class="text-center w-auto">
+                                <button
+                                        type="submit"
+                                        class="btn btn-primary btn-lg w-100 mb-3"
+                                >
+                                    Sign In
+                                </button>
+                            </div>
+                            <!-- Navigation Buttons -->
+                            <div
+                                    class="container-fluid align-content-start text-start mb-2"
+                            >
+                                <a href="{% url 'reset_password' %}">Forgot username/password?</a>
+                                <br/>
+                                <a href="{% url 'register' %}"> Not Enrolled? Sign Up Now. </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+{% endblock %}
+
+{% block JS %}
+    <script>
+        onShowPassword = () => {
+            let passwordInput = document.getElementById("passwordInput"),
+                showPasswordIcon = document.getElementById("showPasswordIcon");
+
+            const isShown = passwordInput.getAttribute("type") === "text";
+
+            passwordInput.setAttribute("type", isShown ? "password" : "text");
+
+            showPasswordIcon.classList.remove(isShown ? "fa-eye-slash" : "fa-eye");
+            showPasswordIcon.classList.add(isShown ? "fa-eye" : "fa-eye-slash");
+        };
+    </script>
+{% endblock %}

@@ -1,0 +1,141 @@
+{% url 'me' as me_url %}
+{% url 'loans' as loans_url %}
+{% url 'my-accounts' as accounts_url %}
+{% url 'my-cards' as cards_url %}
+
+<!-- Header -->
+<header class="sticky-top">
+    <nav class="navbar navbar-expand-lg {{ styles.navbar }}">
+        <div class="container-fluid">
+            <!-- Bank Brand -->
+            <div class="row me-auto ms-2">
+                <a class="navbar-brand" href="#">
+                    <h3>ITBANK <span class="lead">{{ styles.navbar_text }}</span></h3>
+                </a>
+            </div>
+            <!-- Bank Brand -->
+            <!-- Toggle button -->
+            <a
+                    class="ms-auto d-lg-none me-2"
+                    type="button"
+                    aria-label="Log Out"
+                    href="{% url 'logout' %}"
+            >
+                <p class="{{ styles.log_out }} fs-6 pt-3"><i class="fa-solid fa-right-from-bracket"></i> Log Out </p>
+            </a>
+            <button
+                    class="navbar-toggler"
+                    type="button"
+                    data-mdb-toggle="collapse"
+                    data-mdb-target="#collapsableMenu"
+                    aria-controls="collapsableMenu"
+                    aria-expanded="false"
+                    aria-label="Toggle navigation"
+            >
+                <i class="fas fa-bars"></i>
+            </button>
+            <!-- Collapsible wrapper -->
+            <div class="collapse navbar-collapse" id="collapsableMenu">
+                <!-- Left links -->
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 d-lg-none fs-5">
+                    <!-- Home -->
+                    <li class="nav-item">
+                        <a
+                                href="{{ me_url }}"
+                                class="nav-link align-middle px-0 {% if request.path == me_url %} active {% endif %}"
+                        >
+                            <p class="ms-1 d-block"><i class="fa-solid fa-house-user me-2"></i>Home</p>
+                        </a>
+                    </li>
+                    <!-- Accounts -->
+                    <li class="nav-item">
+                        <a href="{{ accounts_url }}"
+                           class="nav-link align-middle px-0  {% if request.path == accounts_url %} active {% endif %}">
+                            <p class="ms-1 d-sm-inline"><i class="fa-solid fa-piggy-bank me-2"></i>Accounts</p>
+                        </a>
+                    </li>
+                    <!-- Cards -->
+                    <li class="nav-item dropdown">
+                        <a
+                                class="nav-link {% if cards_url in request.path %} active {% endif %}"
+                                href="#"
+                                id="cards-dropdown"
+                                role="button"
+                                data-mdb-toggle="dropdown"
+                                aria-expanded="false"
+                        >
+                            <p class="ms-1 d-sm-inline"><i class="fa-solid fa-wallet me-2"></i>Cards</p>
+                        </a>
+                        <!-- Dropdown menu -->
+                        <ul class="dropdown-menu" aria-labelledby="cards-dropdown">
+                            <li>
+                                <a class="dropdown-item" href="{{ cards_url }}">
+
+                                    <p class="ms-1 d-sm-inline"><i class="fa-solid fa-credit-card me-1"></i>Cards</p>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="#">
+                                    <p class="ms-1  d-sm-inline">
+                                        <i class="fa-solid fa-plane-departure me-1"></i>
+                                        Enable for Travel
+                                    </p>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="#">
+                                    <p class="ms-1 d-sm-inline">
+                                        <i class="fa-solid fa-circle-xmark me-1"></i>
+                                        Report Lost
+                                    </p>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="#">
+                                    <p class="ms-1 d-sm-inline">
+                                        <i class="fa-solid fa-lock me-1"></i>
+                                        Banelco Password
+                                    </p>
+                                </a>
+                            </li>
+                            <li>
+                                <hr class="dropdown-divider"/>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="#">
+                                    <p class="ms-1 d-sm-inline">
+                                        <i class="fa-solid fa-child-reaching me-1"></i>
+                                        Debit Card for Kids
+                                    </p>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <!-- Transactions -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <p class="ms-1 d-sm-inline">
+                                <i class="fa-solid fa-arrow-right-arrow-left me-2"></i>
+                                Transactions
+                            </p>
+                        </a>
+                    </li>
+                    <!-- Loans -->
+                    <li class="nav-item">
+                        <a href="{{ loans_url }}"
+                           class="nav-link align-middle px-0 {% if request.path == loans_url %} active {% endif %}">
+                            <p class="ms-1 d-sm-inline">
+                                <i class="fa-solid fa-hand-holding-dollar me-2"></i>
+                                Loans
+                            </p>
+                        </a>
+                    </li>
+                </ul>
+                <!-- Left links -->
+            </div>
+            <!-- Collapsible wrapper -->
+        </div>
+    </nav>
+    <!-- Navbar -->
+</header>
+<!-- Header -->

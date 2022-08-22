@@ -1,0 +1,140 @@
+{% url 'me' as me_url %}
+{% url 'loans' as loans_url %}
+{% url 'my-accounts' as accounts_url %}
+{% url 'my-cards' as cards_url %}
+
+<div class="navbar-light d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 vh-100 ">
+    <ul class="navbar-nav fs-5 flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start"
+        id="menu">
+        <!-- Home -->
+        <li class="nav-item">
+            <a href="{{ me_url }} "
+               class="nav-link align-middle px-0 {% if request.path == me_url %} active {% endif %}">
+                <i class="fa-solid fa-house-user"></i>
+                <p class="ms-1 d-none d-sm-inline">Home</p>
+            </a>
+        </li>
+        <!-- Accounts -->
+        <li class="mt-3 fs-6">
+            <hr/>
+            <p>Accounts</p>
+        </li>
+        <li class="nav-item mb-2">
+            <a href="{{ accounts_url }}"
+               class="nav-link align-middle px-0 {% if request.path == accounts_url %} active {% endif %}">
+                <i class="fa-solid fa-piggy-bank"></i>
+                <p class="ms-1 d-none d-sm-inline">Accounts</p>
+            </a>
+        </li>
+        <!-- Cards -->
+        <li class="mt-3 fs-6">
+            <hr/>
+            <p>Cards</p>
+        </li>
+        <li class="nav-item dropdown mb-2">
+            <a
+                    class="nav-link {% if cards_url in request.path %} active {% endif %}"
+                    href="#"
+                    id="cards-dropdown"
+                    role="button"
+                    data-mdb-toggle="dropdown"
+                    aria-expanded="false"
+            >
+                <i class="fa-solid fa-wallet"></i>
+                <p class="ms-1 d-none d-sm-inline">Cards</p>
+            </a>
+            <!-- Dropdown menu -->
+            <ul class="dropdown-menu fs-5" aria-labelledby="cards-dropdown">
+                <li>
+                    <a class="dropdown-item" href="{{ cards_url }}">
+                        <i class="fa-solid fa-credit-card"></i>
+                        <p class="ms-1 d-none d-sm-inline">Cards</p>
+                    </a>
+                </li>
+                <li>
+                    <a class="dropdown-item" href="#">
+                        <i class="fa-solid fa-plane-departure"></i>
+                        <p class="ms-1 d-none d-sm-inline">Enable for Travel</p>
+                    </a>
+                </li>
+                <li>
+                    <a class="dropdown-item" href="#">
+                        <i class="fa-solid fa-circle-xmark"></i>
+                        <p class="ms-1 d-none d-sm-inline">Report Lost</p>
+                    </a>
+                </li>
+                <li>
+                    <a class="dropdown-item" href="#">
+                        <i class="fa-solid fa-lock"></i>
+                        <p class="ms-1 d-none d-sm-inline">Banelco Password</p>
+                    </a>
+                </li>
+                <li>
+                    <hr class="dropdown-divider"/>
+                </li>
+                <li>
+                    <a class="dropdown-item" href="#">
+                        <i class="fa-solid fa-child-reaching"></i>
+                        <p class="ms-1 d-none d-sm-inline">Debit Card for Kids</p>
+                    </a>
+                </li>
+            </ul>
+        </li>
+        <!-- Transactions -->
+        <li class="mt-3 fs-6">
+            <hr/>
+            <p>Transactions</p>
+        </li>
+        <li class="nav-item mb-2">
+            <a href="#" class="nav-link align-middle px-0">
+                <i class="fa-solid fa-money-bill-transfer"></i>
+                <p class="ms-1 d-none d-sm-inline">Transfers</p>
+            </a>
+        </li>
+        <li class="nav-item mb-2">
+            <a href="#" class="nav-link align-middle px-0">
+                <i class="fa-solid fa-file-invoice-dollar"></i>
+                <p class="ms-1 d-none d-sm-inline">Pay Services</p>
+            </a>
+        </li>
+        <li class="nav-item mb-2">
+            <a href="#" class="nav-link align-middle px-0">
+                <i class="fa-solid fa-money-check"></i>
+                <p class="ms-1 d-none d-sm-inline">e-Check</p>
+            </a>
+        </li>
+        <li class="nav-item mb-2">
+            <a href="#" class="nav-link align-middle px-0">
+                <i class="fa-solid fa-sack-dollar"></i>
+                <p class="ms-1 d-none d-sm-inline">Buy/Sell Dollars</p>
+            </a>
+        </li>
+        <!-- Loans -->
+        <li class="mt-3 fs-6">
+            <hr/>
+            <p>Loans</p>
+        </li>
+        <li class="nav-item mb-2">
+            <a href="{{ loans_url }}"
+               class="nav-link align-middle px-0 {% if request.path == loans_url %} active {% endif %}">
+                <i class="fa-solid fa-hand-holding-dollar"></i>
+                <p class="ms-1 d-none d-sm-inline">Loans</p>
+            </a>
+        </li>
+        <!-- Me -->
+        <li class="mt-3 fs-6">
+            <hr/>
+            <p>Session</p>
+        </li>
+        <li>
+            <a
+                    class="nav-link align-middle px-0"
+                    aria-label="Log Out"
+                    href="{% url 'logout' %}"
+            >
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <p class="ms-1 d-none d-sm-inline">Log Out</p>
+            </a>
+        </li>
+    </ul>
+</div>

@@ -1,0 +1,53 @@
+.secciones {
+  position: relative;
+  width: 100vw;
+  height: 50vh;
+  margin: 0 0 0 0;
+  background-color: #126bc5;
+}
+
+.secciones li {
+  display: inline-block;
+  text-align: center;
+  width: 30%;
+  vertical-align: top;
+  margin: 0 1.5%;
+  padding: 30px 20px;
+  box-sizing: border-box;
+  border-radius: 10px;
+}
+.secciones h2 {
+  font-family: "Montserrat";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 56px;
+  line-height: 80px;
+  /* or 143% */
+
+  text-align: center;
+  letter-spacing: -0.015em;
+
+  color: #ffffff;
+}
+
+.secciones form {
+  text-align: left;
+}
+
+.secciones button {
+  text-align: center;
+}
+
+.li2 {
+  box-sizing: border-box;
+
+  position: absolute;
+  width: 622px;
+  height: 344px;
+  left: 917px;
+  top: calc(50% - 344px / 2 - 18px);
+
+  background: #fdfdfd;
+  border: 1px solid rgba(0, 0, 0, 0.5);
+  border-radius: 27px;
+}

@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block title %}Me{% endblock %}
+
+{% block body-tag %}
+    style="height: 100vh;"
+    class="d-flex flex-column"
+{% endblock %}
+
+{% block header %}
+    {% include 'includes/homebanking-nav.html' %}
+{% endblock %}
+
+{% block main %}
+    <div class="container-fluid">
+        <div class="row flex-nowrap">
+            <div class="col-auto col-md-2 col-xl-2 px-sm-2 px-0 bg-light d-none d-lg-block ">
+                {% block side-bar %}
+                    {% include 'includes/homebanking-side-bar.html' %}
+                {% endblock %}
+            </div>
+            <div class="col py-5 justify-content-center">
+                {% block messages %}
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div id="alert"
+                                 class="alert
+                                        {% if message.level == DEFAULT_MESSAGE_LEVELS.INFO %}
+                                         alert-primary
+                                        {% elif message.level == DEFAULT_MESSAGE_LEVELS.WARNING %}
+                                         alert-warning
+                                        {% elif message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+                                         alert-success
+                                        {% else %}
+                                         alert-danger
+                                        {% endif %}
+                                         w-50 mx-auto text-center
+                                         d-flex justify-content-center align-items-center
+                                        "
+                                 role="alert">
+                                <div class="fw-bold">{{ message }}</div>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endblock %}
+                {% block content %}
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block footer %}
+{% endblock %}
