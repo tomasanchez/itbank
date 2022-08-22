@@ -13,8 +13,9 @@ class Prestamo(models.Model):
         MORTGAGE = 'MO', 'Mortgage'
         PERSONAL = 'PE', 'Personal'
         PLEDGE = 'PL', 'Pledge'
+        STUDENT = 'ST', 'Student'
+        VEHICLE = 'VE', 'Vehicle'
 
-    id = models.IntegerField(primary_key=True, editable=False)
     customer = models.ForeignKey(Cliente, on_delete=models.CASCADE)
     type = models.CharField(
         max_length=2,
