@@ -18,7 +18,9 @@ from .models import Prestamo
 def index(request: WSGIRequest) -> HttpResponse:
     if request.method == 'POST':
         return new_loan(request)
-    locale.setlocale(locale.LC_ALL, 'es_AR.UTF-8')
+
+    locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
+
     user = request.user
     customer = Cliente.objects.get(user=user)
     max_loan = Prestamo.get_max_loan(customer)

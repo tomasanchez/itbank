@@ -52,7 +52,8 @@ class Cuenta(models.Model):
         """
             Return the balance of the account in a string format.
         """
-        locale.setlocale(locale.LC_ALL, 'es_AR.UTF-8')
+        locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
+
         if self.type == Cuenta.AccountType.SAVINGS_USD.value:
             return f"US{locale.currency(self.balance, grouping=True)}"
         else:

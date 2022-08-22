@@ -16,7 +16,8 @@ def index(request: WSGIRequest) -> HttpResponse:
     """
     View function for Me Page of site.
     """
-    locale.setlocale(locale.LC_ALL, 'es_AR.UTF-8')
+    locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
+
     template_name: str = 'cliente/index.html'
     user = request.user
     costumer = Cliente.objects.get(user=user)
