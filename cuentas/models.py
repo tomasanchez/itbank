@@ -43,7 +43,7 @@ class Cuenta(models.Model):
                             default="-",
                             )
     balance = models.FloatField(default=0.0)
-    alias = models.CharField(max_length=200, default=generate_alias)
+    alias = models.CharField(max_length=200, default=generate_alias, unique=True)
 
     class Meta:
         db_table = 'CUENTAS'
