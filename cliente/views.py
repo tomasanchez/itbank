@@ -57,6 +57,15 @@ def index(request: WSGIRequest) -> HttpResponse:
     return render(request, template_name, context)
 
 
+@login_required()
+def split_expenses(request: WSGIRequest) -> HttpResponse:
+    template_name: str = 'cliente/split_expenses.html'
+    context: dict = {}
+    styles = fill_navbar_style(customer=request.user.cliente)
+    context["styles"] = styles
+    return render(request, template_name, context)
+
+
 def fill_navbar_style(styles: dict = {}, customer: Cliente = None) -> dict:
     """
     Fill the navbar style with the customer's type.

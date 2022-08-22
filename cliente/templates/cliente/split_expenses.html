@@ -1,0 +1,118 @@
+{% extends 'side-bar-layout.html' %}
+
+{% load static %}
+
+
+{% block content %}
+    <main class="py-xl-5">
+        <!-- Add Friend Section -->
+        <section>
+            <div class="container searchContainer">
+                <div class="card card-body">
+                    <h3>Keep your friendhips intact</h3>
+                    <p class="lead">
+                        Using Split Expenses app, you will be able to equitably share
+                        expenses with your friends simple: enter a friend name and an
+                        amount as contribution.
+                    </p>
+                    <form id="splitExpensesForm" method="post">
+                        <!-- Name input -->
+                        <div class="form-outline mb-4">
+                            <input
+                                    type="text"
+                                    id="nameInput"
+                                    class="form-control"
+                                    name="name"
+                                    placeholder="Kate Hunington"
+                                    required
+                            />
+                            <label class="form-label" for="nameInput">Name*</label>
+                        </div>
+
+                        <!-- Amount input -->
+                        <div class="form-outline mb-4">
+                            <input
+                                    type="number"
+                                    name="amount"
+                                    id="amountInput"
+                                    class="form-control"
+                                    min="0"
+                                    placeholder="0"
+                                    step="any"
+                                    required
+                            />
+                            <label class="form-label" for="amountInput">Amount*</label>
+                        </div>
+
+                        <div class="container-fluid mt-4">
+                            <div class="float-lg-end float-sm-none d-flex justify-content-center">
+                                <!-- Submit button -->
+                                <button
+                                        type="submit"
+                                        class="btn btn-success btn-lg btn-rounded bg-green mx-2 my-2"
+                                >
+                                    <i class="fa-solid fa-plus"></i>
+                                    Add
+                                </button>
+                                <!-- Reset button -->
+                                <button
+                                        type="reset"
+                                        id="buttonClear"
+                                        class=" btn btn-outline-primary btn-lg btn-rounded mx-2 my-2"
+                                        data-dismiss="modal"
+                                >
+                                    <i class="fa-solid fa-arrow-rotate-left"></i>
+                                    Clear
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <br/>
+
+        <!-- List Section -->
+        <section id="dividers">
+            <div class="container mb-2">
+                <div class="shadow py-2 rounded bg-body">
+                    <!-- Friends List -->
+                    <div class="container overflow-auto" style="max-height: 100vw">
+                        <ul class="list-group list-group-light mt-2 p-2" id="friendsList">
+                            <!-- List Header -->
+                            <div class="sticky-top p-2 bg-body rounded-top">
+                                <h4 class="text-start d-inline-block">
+                                    Group (<span class="fw-bold" id="noOfFriends">0</span>)
+                                </h4>
+                                <a
+                                        id="downloadButton"
+                                        type="button"
+                                        class="btn btn-rounded float-end"
+                                        data-mdb-ripple-color="green"
+                                        download="expenses.json"
+                                >
+                                    <i class="fa-solid fa-download"></i>
+                                </a>
+                            </div>
+                            <p class="text-center text-muted" id="no-data-text">
+                                Noone has been add yet.
+                            </p>
+                            <!-- Friend Items -->
+                        </ul>
+                    </div>
+                    <hr/>
+                    <div class="text-end mt-3 me-4">
+                        <h3 class="text-success">Total: $<span id="totalSum">0</span></h3>
+                        <h5 class="text-muted">Each: $<span id="each">0</span></h5>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Friends Section -->
+    </main>
+{% endblock %}
+
+{% block JS %}
+    <script type="text/javascript" src="{% static 'homebanking/js/splitExpenses.js' %}"></script>
+{% endblock %}
