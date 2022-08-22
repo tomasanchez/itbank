@@ -10,11 +10,6 @@ class Cliente(models.Model):
         CLASSIC = 'C', 'Classic'
         GOLD = 'G', 'Gold'
         BLACK = 'B', 'Black'
-
-    id = models.IntegerField(primary_key=True,
-                             editable=False,
-                             null=False,
-                             )
     user = models.OneToOneField(User,
                                 on_delete=models.CASCADE, unique=True)
     type = models.CharField(
