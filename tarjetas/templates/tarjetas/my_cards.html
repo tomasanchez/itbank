@@ -46,7 +46,7 @@
                                                                 {{ card.get_type_display }}
                                                             </h5>
                                                         {% endif %}
-                                                        <p class="text-muted mb-0 user-select-none"
+                                                        <p class="{{ styles.card_text|default:'text-muted' }} mb-0 user-select-none"
                                                            id="{{ card.id }}-hide">
                                                             {{ card }}
                                                         </p>
@@ -55,7 +55,7 @@
                                                         </p>
                                                         <label class="float-end user-select-none"
                                                                for="{{ card.id }}-cvv">
-                                                            <span class="small text-muted">Valid End:</span>
+                                                            <span class="small {{ styles.card_text|default:'text-muted' }}">Valid End:</span>
                                                             <span class="fw-lighter me-5"
                                                                   id="{{ card.id }}-expiration-hidden">
                                                                 --/--
@@ -65,9 +65,7 @@
                                                             </span>
                                                         </label>
                                                         <input class="form-control-plaintext form-control-lg
-                                                                        fs-6 mt-0 me-auto
-                                                                        w-25
-                                                                      "
+                                                                      fs-6 mt-0 me-auto w-25 {{ styles.card_text|default:'text-dark' }}"
                                                                id="{{ card.id }}-cvv"
                                                                value="{{ card.cvv }}"
                                                                readonly

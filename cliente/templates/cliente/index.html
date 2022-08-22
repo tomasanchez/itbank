@@ -124,7 +124,7 @@
                                             />
                                             <div class="ms-3">
                                                 <p class="fw-bold mb-1 text-start user-select-none">{{ card.get_brand_display }}</p>
-                                                <p class="text-muted mb-0 user-select-none">{{ card }}</p>
+                                                <p class="{{ styles.card_text|default:'text-muted' }} mb-0 user-select-none">{{ card }}</p>
                                             </div>
                                         </div>
                                     </div>
