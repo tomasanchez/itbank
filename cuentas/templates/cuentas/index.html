@@ -23,17 +23,18 @@
                             {% if accounts %}
                                 <!-- Account Items -->
                                 {% for account in accounts %}
-                                    <li class="list-group-item d-flex justify-content-between align-items-start p-3 row">
+                                    <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-start p-3 row"
+                                       href="{% url 'my-accounts-details' pk=account.id %}">
                                         <div class="col">
                                             <div class="fw-bold">{{ account.iban }}</div>
                                             <div class="text-muted">{{ account.get_type_display }}</div>
                                         </div>
                                         <div class="col-auto">
                                             <span class="badge rounded-pill badge-light fs-5">
-                                                {{ account.balance_currency }}
+                                                {{ transaction.balance_currency }}
                                             </span>
                                         </div>
-                                    </li>
+                                    </a>
                                 {% endfor %}
                             {% else %}
                                 <p class="text-center text-muted" id="no-data-text">

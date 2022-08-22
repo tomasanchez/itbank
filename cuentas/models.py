@@ -91,6 +91,15 @@ class Transaction(models.Model):
         else:
             return locale.currency(self.amount, grouping=True)
 
+    def semantic_color(self) -> str:
+        match self.operation:
+            case Transaction.OperationType.DEPOSIT.value:
+                return "success"
+            case Transaction.OperationType.WITHDRAW.value:
+                return "danger"
+            case _:
+                return "light"
+
 
 @receiver(post_save, sender=Cuenta)
 def populate_iban(sender, instance, created, **kwargs):

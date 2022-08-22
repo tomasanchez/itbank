@@ -50,7 +50,7 @@
                     <!-- Accounts -->
                     <li class="nav-item">
                         <a href="{{ accounts_url }}"
-                           class="nav-link align-middle px-0  {% if request.path == accounts_url %} active {% endif %}">
+                           class="nav-link align-middle px-0  {% if accounts_url in request.path %} active {% endif %}">
                             <p class="ms-1 d-sm-inline"><i class="fa-solid fa-piggy-bank me-2"></i>Accounts</p>
                         </a>
                     </li>

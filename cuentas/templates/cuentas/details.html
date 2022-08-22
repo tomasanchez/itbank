@@ -1,0 +1,174 @@
+{% extends 'side-bar-layout.html' %}
+
+{% load static %}
+
+{% block content %}
+    <main class="my-5 py-xl-5">
+        <div class="container-fluid">
+            {% if account %}
+                <!-- Account Details -->
+                <section id="details">
+                    <div class="container text-center my-4">
+                        <!-- Account -->
+                        <div class="card bg-light text-start">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ account.iban }} {{ styles.us_account }}</h5>
+                                <div class="text-muted">{{ account.get_type_display }}</div>
+                                <h6 class="card-subtitle my-2 text-muted text-end">
+                                    Show/Hide Balance
+                                    <i id="showPasswordIcon"
+                                       class="fas fa-eye-slash mx-2"
+                                       aria-hidden="true"
+                                       type="button"
+                                       onclick="onShowBalance()">
+                                    </i>
+                                </h6>
+                                <div class="form-outline mb-2">
+                                    <label class="form-label my-0" for="balance-display">Balance</label>
+                                    <input
+                                            type="text"
+                                            name="balance"
+                                            id="balance-display"
+                                            class="form-control-plaintext form-control-lg fs-4 mt-0 text-dark"
+                                            value="{{ account.balance_currency }}"
+                                            readonly
+                                            disabled
+                                    />
+                                </div>
+
+                                <!-- Button trigger modal -->
+                                <a href="#" class="card-link text-no-break"
+                                   data-mdb-toggle="modal"
+                                   data-mdb-target="#aliasModal"
+                                >
+                                    Consult Alias
+                                </a>
+
+                                <!-- Modal -->
+                                <div class="modal fade" id="aliasModal" tabindex="-1"
+                                     aria-labelledby="aliasModalLabel"
+                                     aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="aliasModalLabel">
+                                                    Update Alias
+                                                </h5>
+                                                <button type="button" class="btn-close" data-mdb-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="container-fluid">
+                                                    <form id="splitExpensesForm" method="post">
+                                                        <!-- Name input -->
+                                                        <div class="form-outline mb-4">
+                                                            <input
+                                                                    type="text"
+                                                                    id="nameInput"
+                                                                    class="form-control form-control-lg"
+                                                                    name="name"
+                                                                    placeholder="{{ user.last_name }}-savings"
+                                                                    value="{{ account.alias }}"
+                                                                    readonly
+                                                            />
+                                                            <label class="form-label" for="nameInput">Alias*</label>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-light"
+                                                        data-mdb-dismiss="modal">Close
+                                                </button>
+                                                <button type="button" class="btn btn-primary disabled">Save
+                                                    changes
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="transactions">
+                    <!-- Transactions -->
+                    <div class="container">
+                        <div class="shadow py-2 bg-body rounded">
+                            <!-- Transaction List -->
+                            <div class="container overflow-auto" style="max-height: 100vh;">
+                                <ul class="list-group list-group-light mt-2 p-2" id="accountsList">
+                                    <!-- List Header -->
+                                    <div class="p-2 bg-body rounded-top">
+                                        <h3 class="text-start d-inline-block">
+                                            Transactions
+                                            (
+                                            <span class="fw-bold text-dark"
+                                                  id="noOfFriends">
+                                            {{ transactions|length }}
+                                        </span>
+                                            )
+                                        </h3>
+                                    </div>
+                                    {% if transactions %}
+                                        <!-- Transaction Items -->
+                                        {% for transaction in transactions %}
+                                            <li class="list-group-item d-flex justify-content-between align-items-start p-3">
+                                                <div class="col">
+                                                    <div class="fw-bolder text-{{  }} fs-4">{{ transaction.get_operation_display }}</div>
+                                                    <div class="fw-bold">{{ transaction.date|date:'m/d/y' }}</div>
+                                                </div>
+                                                <div class="col-auto">
+                                                    <span class="badge rounded-pill badge-{{ transaction.semantic_color }} fs-5">
+                                                        {{ transaction.balance_currency }}
+                                                    </span>
+                                                </div>
+                                            </li>
+                                        {% endfor %}
+                                    {% else %}
+                                        <p class="text-center text-muted" id="no-data-text">
+                                            No recent Transactions were found.
+                                        </p>
+                                    {% endif %}
+
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            {% else %}
+                <div class="alert alert-danger" role="alert">
+                    <h4 class="alert-heading">
+                        <i class="fa-solid fa-circle-exclamation mx-2"></i>
+                        Does not exists
+                    </h4>
+                    <p>The request Bank Account does not exist.</p>
+                    <hr>
+                    <p class="mb-0">
+                        It is possible that the Bank Account has been deleted, or you do not have permission to
+                        access it.
+                    </p>
+                </div>
+            {% endif %}
+        </div>
+    </main>
+{% endblock %}
+
+{% block JS %}
+    <script>
+        onShowBalance = () => {
+            let passwordInput = document.getElementById("balance-display"),
+                usBalanceInput = document.getElementById("balance-us-display"),
+                showPasswordIcon = document.getElementById("showPasswordIcon");
+
+            const isShown = passwordInput.getAttribute("type") === "text";
+
+            passwordInput.setAttribute("type", isShown ? "password" : "text");
+            usBalanceInput?.setAttribute("type", isShown ? "password" : "text");
+
+            showPasswordIcon.classList.remove(isShown ? "fa-eye-slash" : "fa-eye");
+            showPasswordIcon.classList.add(isShown ? "fa-eye" : "fa-eye-slash");
+        };
+    </script>
+{% endblock %}
