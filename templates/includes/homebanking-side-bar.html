@@ -2,6 +2,7 @@
 {% url 'loans' as loans_url %}
 {% url 'my-accounts' as accounts_url %}
 {% url 'my-cards' as cards_url %}
+{% url 'transfers' as transfers_url %}
 
 <div class="navbar-light d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 vh-100 ">
     <ul class="navbar-nav fs-5 flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start"
@@ -86,7 +87,7 @@
             <p>Transactions</p>
         </li>
         <li class="nav-item mb-2">
-            <a href="#" class="nav-link align-middle px-0">
+            <a href="{{ transfers_url }}" class="nav-link {% if transfers_url in request.path %} active {% endif %}">
                 <i class="fa-solid fa-money-bill-transfer"></i>
                 <p class="ms-1 d-none d-sm-inline">Transfers</p>
             </a>
@@ -104,7 +105,7 @@
             </a>
         </li>
         <li class="nav-item mb-2">
-            <a href="#" class="nav-link align-middle px-0">
+            <a href="{{ transfers_url }}" class="nav-link align-middle px-0">
                 <i class="fa-solid fa-sack-dollar"></i>
                 <p class="ms-1 d-none d-sm-inline">Buy/Sell Dollars</p>
             </a>

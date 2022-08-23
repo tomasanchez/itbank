@@ -116,7 +116,9 @@
                                         {% for transaction in transactions %}
                                             <li class="list-group-item d-flex justify-content-between align-items-start p-3">
                                                 <div class="col">
-                                                    <div class="fw-bolder text-{{ transaction.semantic_color }} fs-4">{{ transaction.get_operation_display }}</div>
+                                                    <div class="fw-bolder text-{{ transaction.semantic_color }} fs-4">
+                                                        {{ transaction.get_operation_display }}
+                                                    </div>
                                                     <div class="fw-bold">{{ transaction.date|date:'m/d/y' }}</div>
                                                 </div>
                                                 <div class="col-auto">

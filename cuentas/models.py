@@ -76,6 +76,7 @@ class Transaction(models.Model):
 
     class Meta:
         db_table = 'MOVIMIENTOS'
+        ordering = ['-id']
 
     def __str__(self):
         return f"{self.balance_currency()}\t" \
@@ -97,8 +98,13 @@ class Transaction(models.Model):
                 return "success"
             case Transaction.OperationType.WITHDRAW.value:
                 return "danger"
+            case Transaction.OperationType.TRANSFER.value:
+                if self.amount >= 0:
+                    return "success"
+                else:
+                    return "danger"
             case _:
-                return "light"
+                return "dark"
 
 
 @receiver(post_save, sender=Cuenta)

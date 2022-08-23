@@ -73,6 +73,7 @@ def fill_navbar_style(styles: dict = {}, customer: Cliente = None) -> dict:
     styles['navbar'] = "navbar-light bg-body"
     styles['log_out'] = "text-dark"
     styles['cards_color'] = "bg-blueish"
+    styles['navbar_text'] = ""
 
     if customer is not None:
         if customer.type == Cliente.CustomerType.GOLD.value:
@@ -86,4 +87,5 @@ def fill_navbar_style(styles: dict = {}, customer: Cliente = None) -> dict:
             styles['cards_color'] = "bg-prestigious text-white"
             styles['card_svg'] = "svg-white"
             styles['card_text'] = "text-gray"
+
     return styles
