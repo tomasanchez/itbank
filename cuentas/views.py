@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.db.models import Q
 from django.shortcuts import render, redirect
 
 # Create your views here.
@@ -96,7 +97,7 @@ def handle_transfer_post(request):
         if not using_alias:
             to_account = Cuenta.objects.get(pk=to_id)
         elif to_id != from_account.alias:
-            to_account = Cuenta.objects.get(alias=to_id)
+            to_account = Cuenta.objects.get(Q(alias=to_id) | Q(iban=to_id))
         else:
             messages.error(request, 'Can not transfer to the same Account')
             return redirect('transfers')
@@ -114,10 +115,16 @@ def handle_transfer_post(request):
         to_account.balance += amount
 
         transfer_sent = Transaction(amount=(-amount), account=from_account,
-                                    operation=Transaction.OperationType.TRANSFER.value)
+                                    operation=Transaction.OperationType.TRANSFER.value,
+                                    description=f"To {to_account.customer.last_name}, "
+                                                f"{to_account.customer.first_name} "
+                                                f"({to_account.iban})")
 
         transfer_received = Transaction(amount=amount, account=to_account,
-                                        operation=Transaction.OperationType.TRANSFER.value)
+                                        operation=Transaction.OperationType.TRANSFER.value,
+                                        description=f"From {from_account.customer.last_name}, "
+                                                    f"{from_account.customer.first_name} "
+                                                    f"({from_account.iban})")
 
         from_account.save()
         transfer_sent.save()

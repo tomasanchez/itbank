@@ -73,6 +73,7 @@ class Transaction(models.Model):
     operation = models.CharField(choices=OperationType.choices, max_length=2)
     amount = models.FloatField()
     date = models.DateTimeField(default=datetime.date.today, editable=False)
+    description = models.TextField(null=True, blank=True, default="No description")
 
     class Meta:
         db_table = 'MOVIMIENTOS'

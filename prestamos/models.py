@@ -61,5 +61,6 @@ def create_transaction(sender, instance, created, **kwargs):
                 account=savings_account,
                 operation=Transaction.OperationType.DEPOSIT.value,
                 amount=instance.total,
+                description=f"{instance.get_type_display()} Loan"
             )
             transaction.save()

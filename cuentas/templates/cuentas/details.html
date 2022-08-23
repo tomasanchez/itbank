@@ -120,6 +120,7 @@
                                                         {{ transaction.get_operation_display }}
                                                     </div>
                                                     <div class="fw-bold">{{ transaction.date|date:'m/d/y' }}</div>
+                                                    <p>{{ transaction.description }}</p>
                                                 </div>
                                                 <div class="col-auto">
                                                     <span class="badge rounded-pill badge-{{ transaction.semantic_color }} fs-5">
