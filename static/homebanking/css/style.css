@@ -61,8 +61,7 @@
 /* UI Elements ====================================================================== */
 
 .credit-card {
-    width: 19rem !important;
+    width: 19rem;
     max-width: 100%;
-    height: 10rem !important;
-    min-height: 10rem !important;
+    height: 11rem;
 }
