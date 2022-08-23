@@ -73,6 +73,7 @@ def handle_transfer_post(request):
 
     try:
         to_id = int(to_id)
+        using_alias = False
     except ValueError:
         using_alias = True
 

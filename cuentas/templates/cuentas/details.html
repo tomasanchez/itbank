@@ -3,7 +3,7 @@
 {% load static %}
 
 {% block content %}
-    <main class="my-5 py-xl-5">
+    <main class="my-3 py-xl-3">
         <div class="container-fluid">
             {% if account %}
                 <!-- Account Details -->
@@ -98,7 +98,7 @@
                         <div class="shadow py-2 bg-body rounded">
                             <!-- Transaction List -->
                             <div class="container overflow-auto" style="max-height: 100vh;">
-                                <ul class="list-group list-group-light mt-2 p-2" id="accountsList">
+                                <ul class="list-group list-group-light mt-2 p-2" id="transactionList">
                                     <!-- List Header -->
                                     <div class="p-2 bg-body rounded-top">
                                         <h3 class="text-start d-inline-block">
@@ -114,7 +114,7 @@
                                     {% if transactions %}
                                         <!-- Transaction Items -->
                                         {% for transaction in transactions %}
-                                            <li class="list-group-item d-flex justify-content-between align-items-start p-3">
+                                            <li class="list-group-item d-flex justify-content-between align-items-start p-3 row">
                                                 <div class="col">
                                                     <div class="fw-bolder text-{{ transaction.semantic_color }} fs-4">
                                                         {{ transaction.get_operation_display }}
@@ -122,9 +122,9 @@
                                                     <div class="fw-bold">{{ transaction.date|date:'m/d/y' }}</div>
                                                     <p>{{ transaction.description }}</p>
                                                 </div>
-                                                <div class="col-auto">
-                                                    <span class="badge rounded-pill badge-{{ transaction.semantic_color }} fs-5">
-                                                        {{ transaction.balance_currency }}
+                                                <div class="col d-flex">
+                                                    <span class="badge rounded-pill badge-{{ transaction.semantic_color }} fs-5 mx-auto">
+                                                            {{ transaction.balance_currency }}
                                                     </span>
                                                 </div>
                                             </li>
