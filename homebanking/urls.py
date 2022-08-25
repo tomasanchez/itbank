@@ -26,6 +26,7 @@ urlpatterns = [
                   path('accounts/', include('login.urls')),
                   path('customers/', include('cliente.urls')),
                   path('loans/', include('prestamos.urls')),
+                  path('api/', include('api.urls')),
               ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
