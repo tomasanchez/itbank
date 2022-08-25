@@ -119,4 +119,6 @@ def cards_customer_data(request, username):
         return Response(serializer.data)
     except User.DoesNotExist:
         return Response({'status': 'User does not exists'}, status=status.HTTP_404_NOT_FOUND)
-    
+
+
+
