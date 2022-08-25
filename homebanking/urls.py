@@ -27,12 +27,12 @@ urlpatterns = [
                   # Optional UI:
                   path('api/schema/swagger-ui/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
                   path('api/schema/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
+                  path('api/', include('api.urls')),
                   path('', views.index, name='home'),
                   path('admin/', admin.site.urls),
                   path('accounts/', include('login.urls')),
                   path('customers/', include('cliente.urls')),
                   path('loans/', include('prestamos.urls')),
-                  path('api/v1/', include('api.urls')),
               ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

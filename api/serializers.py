@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
@@ -38,12 +40,62 @@ class CuentaSerializer(serializers.ModelSerializer):
         fields = ['iban', 'type', 'alias', 'balance']
 
 
+class PrestamoCreateSerializer(serializers.ModelSerializer):
+    customer = serializers.CharField(source='customer.username', write_only=True)
+    date = serializers.DateTimeField(format="%Y-%m-%d", required=False, default=datetime.now)
+
+    class Meta:
+        model = Prestamo
+        fields = ['type', 'date', 'total', "customer", "date"]
+
+    def validate(self, data):
+        amount = data['total']
+
+        try:
+            amount = float(amount)
+            if amount <= 0:
+                raise serializers.ValidationError("Amount must be greater than 0")
+        except ValueError:
+            raise serializers.ValidationError("Amount must be a number")
+
+        loan_type = data['type']
+        if loan_type not in Prestamo.LoanType.values:
+            raise serializers.ValidationError("Invalid loan type")
+
+        username = data['customer']["username"]
+        if username is None:
+            raise serializers.ValidationError("Username is required")
+
+        try:
+            customer = User.objects.get(username=username).cliente
+        except User.DoesNotExist:
+            raise serializers.ValidationError("Customer does not exists")
+
+        max_loan = Prestamo.get_max_loan(customer)
+
+        if amount > max_loan:
+            raise serializers.ValidationError("Amount is greater than the maximum allowed loan")
+
+        return data
+
+    def create(self, validated_data):
+        customer = User.objects.get(username=validated_data['customer']["username"]).cliente
+        loan = Prestamo(
+            customer=customer,
+            type=validated_data['type'],
+            total=validated_data['total'],
+            date=validated_data['date']
+        )
+        loan.save()
+        return loan
+
+
 class PrestamoSerializer(serializers.ModelSerializer):
     type = serializers.CharField(source='get_type_display')
 
     class Meta:
         model = Prestamo
-        fields = ['type', 'date', 'total', ]
+        fields = ['type', 'date', 'total']
 
 
 class ClienteSerializer(serializers.ModelSerializer):
