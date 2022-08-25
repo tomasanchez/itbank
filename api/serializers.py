@@ -11,9 +11,26 @@ from tarjetas.models import Tarjeta
 
 
 class AddressSerializer(serializers.ModelSerializer):
+    street = serializers.CharField(required=False)
+    number = serializers.IntegerField(required=False)
+    city = serializers.CharField(required=False)
+    state = serializers.CharField(required=False)
+    country = serializers.CharField(required=False)
+    zip_code = serializers.CharField(required=False)
+
     class Meta:
         model = Address
         fields = ['street', 'number', 'city', 'state', 'country', 'zip_code']
+
+    def update(self, instance, validated_data):
+        instance.street = validated_data.get('street', instance.street)
+        instance.number = validated_data.get('number', instance.number)
+        instance.city = validated_data.get('city', instance.city)
+        instance.state = validated_data.get('state', instance.state)
+        instance.country = validated_data.get('country', instance.country)
+        instance.zip_code = validated_data.get('zip_code', instance.zip_code)
+        instance.save()
+        return instance
 
 
 class BranchSerializer(serializers.ModelSerializer):

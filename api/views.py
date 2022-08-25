@@ -5,11 +5,11 @@ from rest_framework.decorators import api_view, authentication_classes, permissi
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 
-from branches.models import Branch
+from branches.models import Branch, Address
 from prestamos.models import Prestamo
 from tarjetas.models import Tarjeta
 from .serializers import UserSerializer, PrestamoSerializer, BranchSerializer, TarjetaSerializer, \
-    PrestamoCreateSerializer
+    PrestamoCreateSerializer, AddressSerializer
 
 
 @api_view(['GET'])
@@ -168,5 +168,51 @@ def loan_data(request, pk):
         return get_loan(request, pk)
     elif request.method == 'DELETE':
         return delete_loan(request, pk)
+    else:
+        return Response({'status': 'Method not allowed'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+
+def update_address(request, pk):
+    if not request.user.is_staff and request.user.employee is None:
+        query = request.user.cliente.address
+    else:
+        query = Address.objects
+
+    try:
+        address = query.get(pk=pk)
+    except Address.DoesNotExist:
+        return Response({'status': 'Address does not exists'}, status=status.HTTP_404_NOT_FOUND)
+
+    address_serializer = AddressSerializer(address, data=request.data)
+
+    if address_serializer.is_valid():
+        address_serializer.update(instance=address, validated_data=request.data)
+        return Response(address_serializer.data, status=status.HTTP_200_OK)
+    else:
+        return Response(address_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+def get_address(request, pk):
+    if not request.user.is_staff and request.user.employee is None:
+        query = request.user.cliente.address
+    else:
+        query = Address.objects
+
+    try:
+        address = query.get(pk=pk)
+        serializer = AddressSerializer(address, many=False)
+        return Response(serializer.data)
+    except Address.DoesNotExist:
+        return Response({'status': 'Address does not exists'}, status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(['GET', 'PUT', 'PATCH'])
+@authentication_classes([SessionAuthentication, BasicAuthentication])
+@permission_classes([IsAuthenticated])
+def address_data(request, pk):
+    if request.method == 'GET':
+        return get_address(request, pk)
+    elif request.method == 'PUT' or request.method == 'PATCH':
+        return update_address(request, pk)
     else:
         return Response({'status': 'Method not allowed'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
