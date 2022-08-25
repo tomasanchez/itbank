@@ -109,13 +109,43 @@ def add_loan(request):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+def get_loan(request, pk):
+    if not request.user.is_staff and request.user.employee is None:
+        query = request.user.cliente.prestamo_set
+    else:
+        query = Prestamo.objects
+
+    try:
+        loan = query.get(pk=pk)
+        serializer = PrestamoSerializer(loan, many=False)
+        return Response(serializer.data)
+    except Prestamo.DoesNotExist:
+        return Response({'status': 'No loan found'}, status=status.HTTP_404_NOT_FOUND)
+
+
 def get_loans(request):
     loans = Prestamo.objects.all()
     serializer = PrestamoSerializer(loans, many=True)
     return Response(serializer.data)
 
 
-@api_view(['GET', 'POST'])
+def delete_loan(request, pk):
+    if not request.user.is_staff and request.user.employee is None:
+        try:
+            loan = request.user.cliente.prestamo_set.get(pk=pk)
+        except Prestamo.DoesNotExist:
+            return Response({'status': 'Requested LoanLoan does not exists'}, status=status.HTTP_404_NOT_FOUND)
+    else:
+        try:
+            loan = Prestamo.objects.get(pk=pk)
+        except Prestamo.DoesNotExist:
+            return Response({'status': 'Loan does not exists'}, status=status.HTTP_404_NOT_FOUND)
+
+    loan.delete()
+    return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+@api_view(['GET', 'POST', ])
 @authentication_classes([SessionAuthentication, BasicAuthentication])
 @permission_classes([IsAuthenticated, ])
 def loans_data(request):
@@ -130,13 +160,13 @@ def loans_data(request):
         return Response({'status': 'Method not allowed'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
 
-@api_view(['GET'])
+@api_view(['GET', 'DELETE'])
 @authentication_classes([SessionAuthentication, BasicAuthentication])
 @permission_classes([IsAuthenticated])
 def loan_data(request, pk):
-    try:
-        loan = Prestamo.objects.get(pk=pk)
-        serializer = PrestamoSerializer(loan, many=False)
-        return Response(serializer.data)
-    except Prestamo.DoesNotExist:
-        return Response({'status': 'No loan found'}, status=status.HTTP_404_NOT_FOUND)
+    if request.method == 'GET':
+        return get_loan(request, pk)
+    elif request.method == 'DELETE':
+        return delete_loan(request, pk)
+    else:
+        return Response({'status': 'Method not allowed'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)

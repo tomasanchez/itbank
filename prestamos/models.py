@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from django.db import models
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 
 from cliente.models import Cliente
@@ -64,3 +64,19 @@ def create_transaction(sender, instance, created, **kwargs):
                 description=f"{instance.get_type_display()} Loan"
             )
             transaction.save()
+
+
+@receiver(post_delete, sender=Prestamo)
+def roll_back_loan(sender, instance, **kwargs):
+    # Update account balance
+    savings_account = instance.customer.user.cuenta_set.get(type=Cuenta.AccountType.SAVINGS.value)
+    if savings_account is not None:
+        savings_account.balance -= instance.total
+        savings_account.save()
+        transaction = Transaction(
+            account=savings_account,
+            operation=Transaction.OperationType.ROLL_BACK.value,
+            amount=-instance.total,
+            description=f"Roll Back for {instance.get_type_display()} Loan"
+        )
+        transaction.save()

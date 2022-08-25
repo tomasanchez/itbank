@@ -68,6 +68,7 @@ class Transaction(models.Model):
         DEPOSIT = 'DE', 'Deposit'
         WITHDRAW = 'WI', 'Withdraw'
         TRANSFER = 'TR', 'Transfer'
+        ROLL_BACK = 'RB', 'Roll Back'
 
     account = models.ForeignKey(Cuenta, on_delete=models.CASCADE)
     operation = models.CharField(choices=OperationType.choices, max_length=2)
