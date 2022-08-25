@@ -2,13 +2,16 @@ from django.contrib.auth.models import User
 from rest_framework import status
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 
-from .serializers import UserSerializer
+from prestamos.models import Prestamo
+from .serializers import UserSerializer, PrestamoSerializer
 
 
 @api_view(['GET'])
+@authentication_classes([SessionAuthentication, BasicAuthentication])
+@permission_classes([IsAuthenticated, IsAdminUser])
 def customer_data(request):
     users = User.objects.all()
     serializer = UserSerializer(users, many=True)
@@ -24,4 +27,25 @@ def customer_me_data(request):
         serializer = UserSerializer(user, many=False)
         return Response(serializer.data)
     except User.DoesNotExist:
-        return Response({'status': 'details'}, status=status.HTTP_404_NOT_FOUND)
+        return Response({'status': 'User does not exists'}, status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(['GET'])
+@authentication_classes([SessionAuthentication, BasicAuthentication])
+@permission_classes([IsAuthenticated, IsAdminUser])
+def loans_data(request):
+    loans = Prestamo.objects.all()
+    serializer = PrestamoSerializer(loans, many=True)
+    return Response(serializer.data)
+
+
+@api_view(['GET'])
+@authentication_classes([SessionAuthentication, BasicAuthentication])
+@permission_classes([IsAuthenticated])
+def loan_data(request, pk):
+    try:
+        loan = Prestamo.objects.get(pk=pk)
+        serializer = PrestamoSerializer(loan, many=False)
+        return Response(serializer.data)
+    except Prestamo.DoesNotExist:
+        return Response({'status': 'No loan found'}, status=status.HTTP_404_NOT_FOUND)

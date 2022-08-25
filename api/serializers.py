@@ -30,10 +30,12 @@ class CuentaSerializer(serializers.ModelSerializer):
         fields = ['iban', 'type', 'alias', 'balance']
 
 
-class PrestamoSerializer(serializers.Serializer):
+class PrestamoSerializer(serializers.ModelSerializer):
+    type = serializers.CharField(source='get_type_display')
+
     class Meta:
         model = Prestamo
-        fields = '__all__'
+        fields = ['type', 'date', 'total', ]
 
 
 class ClienteSerializer(serializers.ModelSerializer):
@@ -49,11 +51,12 @@ class UserSerializer(serializers.ModelSerializer):
     customer = ClienteSerializer(many=False, read_only=True, source='cliente')
     accounts = CuentaSerializer(many=True, read_only=True, source='cuenta_set')
     cards = TarjetaSerializer(many=True, read_only=True, source='tarjeta_set')
+    loans = PrestamoSerializer(many=True, read_only=True, source='cliente.prestamo_set')
     extra_kwargs = {'password': {'write_only': True}}
 
     class Meta:
         model = User
-        fields = ('username', 'email', 'first_name', 'last_name', 'customer', 'accounts', "cards",)
+        fields = ('username', 'email', 'first_name', 'last_name', 'customer', 'accounts', "cards", 'loans')
 
     def create(self, validated_data):
         user = User(
