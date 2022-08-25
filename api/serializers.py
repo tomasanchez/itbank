@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
-from branches.models import Address
+from branches.models import Address, Branch
 from cliente.models import Cliente
 from cuentas.models import Cuenta
 from prestamos.models import Prestamo
@@ -12,6 +12,14 @@ class AddressSerializer(serializers.ModelSerializer):
     class Meta:
         model = Address
         fields = ['street', 'number', 'city', 'state', 'country', 'zip_code']
+
+
+class BranchSerializer(serializers.ModelSerializer):
+    address = AddressSerializer(read_only=True)
+
+    class Meta:
+        model = Branch
+        fields = ['name', 'address']
 
 
 class TarjetaSerializer(serializers.ModelSerializer):
