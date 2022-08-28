@@ -1,8 +1,8 @@
 from django.contrib.auth.models import User
-from rest_framework import status
+from rest_framework import status, viewsets
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
-from rest_framework.decorators import api_view, authentication_classes, permission_classes
-from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework.decorators import api_view, authentication_classes, permission_classes, action
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from branches.models import Branch, Address
@@ -12,25 +12,37 @@ from .serializers import UserSerializer, PrestamoSerializer, BranchSerializer, T
     PrestamoCreateSerializer, AddressSerializer
 
 
-@api_view(['GET'])
-@authentication_classes([SessionAuthentication, BasicAuthentication])
-@permission_classes([IsAuthenticated, IsAdminUser])
-def customer_data(request):
-    users = User.objects.all()
-    serializer = UserSerializer(users, many=True)
-    return Response(serializer.data)
+class UserViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = User.objects.all().order_by('-date_joined')
+    serializer_class = UserSerializer
+    lookup_field = 'username'
+    allowed_methods = ['GET']
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated]
 
-
-@api_view(['GET'])
-@authentication_classes([SessionAuthentication, BasicAuthentication])
-@permission_classes([IsAuthenticated])
-def customer_me_data(request):
-    try:
-        user = User.objects.get(pk=request.user.pk)
-        serializer = UserSerializer(user, many=False)
+    @action(detail=False, methods=['get'],
+            authentication_classes=[SessionAuthentication, BasicAuthentication],
+            permission_classes=[IsAuthenticated]
+            )
+    def me(self, request):
+        serializer = self.get_serializer(request.user, many=False)
         return Response(serializer.data)
-    except User.DoesNotExist:
-        return Response({'status': 'User does not exists'}, status=status.HTTP_404_NOT_FOUND)
+
+    @action(detail=True, methods=['get'],
+            authentication_classes=[SessionAuthentication, BasicAuthentication],
+            permission_classes=[IsAuthenticated])
+    def cards(self, request, username=None):
+        serializer_class = TarjetaSerializer
+        if username is None:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        if username == 'me':
+            user = request.user
+        else:
+            user = User.objects.get(username=username)
+
+        cards = user.tarjeta_set.filter(type=Tarjeta.CardType.CREDIT.value)
+        serializer = serializer_class(cards, many=True)
+        return Response(serializer.data)
 
 
 @api_view(['GET'])
