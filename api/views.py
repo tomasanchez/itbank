@@ -90,31 +90,36 @@ class AddressViewSet(viewsets.ModelViewSet):
             return Response(address_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['GET'])
-@authentication_classes([SessionAuthentication, BasicAuthentication])
-@permission_classes([IsAuthenticated])
-def branches_data(request):
-    if not request.user.is_staff and request.user.employee is None:
+class BranchViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Branch.objects.all()
+    serializer_class = BranchSerializer
+    lookup_field = 'pk'
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def list(self, request):
+        if not request.user.is_staff and request.user.employee is None:
+            return Response({'status': "You don't have enough permissions."}, status=status.HTTP_403_FORBIDDEN)
+        return Response(self.get_serializer(self.get_queryset(), many=True).data)
+
+    @action(detail=True, methods=['get'],
+            authentication_classes=[SessionAuthentication, BasicAuthentication],
+            permission_classes=[IsAuthenticated])
+    def loans(self, request, pk=None):
+
+        if pk is None:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        if request.user.is_staff or request.user.employee is not None:
+            try:
+                Branch.objects.get(pk=pk)
+                loans = Prestamo.objects.prefetch_related('customer').filter(customer__branch__pk=pk)
+                serializer = PrestamoSerializer(loans, many=True)
+                return Response(serializer.data)
+            except Branch.DoesNotExist:
+                return Response({'status': 'No branch found'}, status=status.HTTP_404_NOT_FOUND)
+
         return Response({'status': "You don't have enough permissions."}, status=status.HTTP_403_FORBIDDEN)
-
-    branches = Branch.objects.all()
-    serializer = BranchSerializer(branches, many=True)
-    return Response(serializer.data)
-
-
-@api_view(['GET'])
-@authentication_classes([SessionAuthentication, BasicAuthentication])
-@permission_classes([IsAuthenticated])
-def branch_data(request, pk):
-    if not request.user.is_staff and request.user.employee is None:
-        return Response({'status': "You don't have enough permissions."}, status=status.HTTP_403_FORBIDDEN)
-
-    try:
-        loans = Prestamo.objects.prefetch_related('customer').filter(customer__branch__pk=pk)
-        serializer = PrestamoSerializer(loans, many=True)
-        return Response(serializer.data)
-    except Branch.DoesNotExist:
-        return Response({'status': 'No branch found'}, status=status.HTTP_404_NOT_FOUND)
 
 
 @api_view(['GET'])
