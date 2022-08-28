@@ -140,16 +140,29 @@ class CardViewSet(viewsets.ReadOnlyModelViewSet):
         return super().retrieve(request, pk)
 
 
-@api_view(['GET'])
-@authentication_classes([SessionAuthentication, BasicAuthentication])
-@permission_classes([IsAuthenticated])
-def cards_data(request):
-    if not request.user.is_staff and request.user.employee is None:
-        return Response({'status': "You don't have enough permissions."}, status=status.HTTP_403_FORBIDDEN)
+class LoanViewSet(viewsets.ModelViewSet):
+    queryset = Prestamo.objects.all()
+    serializer_class = PrestamoSerializer
+    lookup_field = 'pk'
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated]
 
-    credit_cards = Tarjeta.objects.filter(type=Tarjeta.CardType.CREDIT)
-    serializer = TarjetaSerializer(credit_cards, many=True)
-    return Response(serializer.data)
+    def list(self, request):
+        if not request.user.is_staff and request.user.employee is None:
+            return Response({'status': "You don't have enough permissions."}, status=status.HTTP_403_FORBIDDEN)
+        return Response(self.get_serializer(self.get_queryset(), many=True).data)
+
+    def retrieve(self, request, pk):
+        return get_loan(request, pk)
+
+    def create(self, request):
+        return add_loan(request)
+
+    def update(self, request, pk):
+        return Response({'status': "Not defined"}, status=status.HTTP_501_NOT_IMPLEMENTED)
+
+    def destroy(self, request, pk):
+        return delete_loan(request, pk)
 
 
 @api_view(['GET'])
@@ -203,12 +216,6 @@ def get_loan(request, pk):
         return Response({'status': 'No loan found'}, status=status.HTTP_404_NOT_FOUND)
 
 
-def get_loans(request):
-    loans = Prestamo.objects.all()
-    serializer = PrestamoSerializer(loans, many=True)
-    return Response(serializer.data)
-
-
 def delete_loan(request, pk):
     if not request.user.is_staff and request.user.employee is None:
         try:
@@ -223,30 +230,3 @@ def delete_loan(request, pk):
 
     loan.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
-
-
-@api_view(['GET', 'POST', ])
-@authentication_classes([SessionAuthentication, BasicAuthentication])
-@permission_classes([IsAuthenticated, ])
-def loans_data(request):
-    if not request.user.is_staff and request.user.employee is None:
-        return Response({'status': "You don't have enough permissions."}, status=status.HTTP_403_FORBIDDEN)
-
-    if request.method == 'GET':
-        return get_loans(request)
-    elif request.method == 'POST':
-        return add_loan(request)
-    else:
-        return Response({'status': 'Method not allowed'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
-
-
-@api_view(['GET', 'DELETE'])
-@authentication_classes([SessionAuthentication, BasicAuthentication])
-@permission_classes([IsAuthenticated])
-def loan_data(request, pk):
-    if request.method == 'GET':
-        return get_loan(request, pk)
-    elif request.method == 'DELETE':
-        return delete_loan(request, pk)
-    else:
-        return Response({'status': 'Method not allowed'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
