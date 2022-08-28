@@ -122,6 +122,24 @@ class BranchViewSet(viewsets.ReadOnlyModelViewSet):
         return Response({'status': "You don't have enough permissions."}, status=status.HTTP_403_FORBIDDEN)
 
 
+class CardViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Tarjeta.objects.filter(type=Tarjeta.CardType.CREDIT.value)
+    serializer_class = TarjetaSerializer
+    lookup_field = 'pk'
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def list(self, request):
+        if not request.user.is_staff and request.user.employee is None:
+            return Response({'status': "You don't have enough permissions."}, status=status.HTTP_403_FORBIDDEN)
+        return Response(self.get_serializer(self.get_queryset(), many=True).data)
+
+    def retrieve(self, request, pk):
+        if not request.user.is_staff and request.user.employee is None:
+            return Response({'status': "You don't have enough permissions."}, status=status.HTTP_403_FORBIDDEN)
+        return super().retrieve(request, pk)
+
+
 @api_view(['GET'])
 @authentication_classes([SessionAuthentication, BasicAuthentication])
 @permission_classes([IsAuthenticated])
