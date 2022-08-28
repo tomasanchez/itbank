@@ -38,11 +38,56 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
         if username == 'me':
             user = request.user
         else:
+            if not request.user.is_staff and request.user.employee is None:
+                return Response({'status': "You don't have enough permissions."}, status=status.HTTP_403_FORBIDDEN)
             user = User.objects.get(username=username)
 
         cards = user.tarjeta_set.filter(type=Tarjeta.CardType.CREDIT.value)
         serializer = serializer_class(cards, many=True)
         return Response(serializer.data)
+
+
+class AddressViewSet(viewsets.ModelViewSet):
+    queryset = Address.objects.all()
+    serializer_class = AddressSerializer
+    lookup_field = 'pk'
+    allowed_methods = ['GET', 'PUT']
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def retrieve(self, request, pk):
+
+        if not request.user.is_staff and request.user.employee is None:
+            query = request.user.cliente.address
+        else:
+            query = Address.objects
+
+        try:
+            address = query.get(pk=pk)
+            serializer = AddressSerializer(address, many=False)
+            return Response(serializer.data)
+        except Address.DoesNotExist:
+            return Response({'status': 'Address does not exists'}, status=status.HTTP_404_NOT_FOUND)
+
+    def update(self, request, pk):
+
+        if not request.user.is_staff and request.user.employee is None:
+            query = request.user.cliente.address
+        else:
+            query = Address.objects
+
+        try:
+            address = query.get(pk=pk)
+        except Address.DoesNotExist:
+            return Response({'status': 'Address does not exists'}, status=status.HTTP_404_NOT_FOUND)
+
+        address_serializer = AddressSerializer(address, data=request.data)
+
+        if address_serializer.is_valid():
+            address_serializer.update(instance=address, validated_data=request.data)
+            return Response(address_serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(address_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['GET'])
@@ -180,51 +225,5 @@ def loan_data(request, pk):
         return get_loan(request, pk)
     elif request.method == 'DELETE':
         return delete_loan(request, pk)
-    else:
-        return Response({'status': 'Method not allowed'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
-
-
-def update_address(request, pk):
-    if not request.user.is_staff and request.user.employee is None:
-        query = request.user.cliente.address
-    else:
-        query = Address.objects
-
-    try:
-        address = query.get(pk=pk)
-    except Address.DoesNotExist:
-        return Response({'status': 'Address does not exists'}, status=status.HTTP_404_NOT_FOUND)
-
-    address_serializer = AddressSerializer(address, data=request.data)
-
-    if address_serializer.is_valid():
-        address_serializer.update(instance=address, validated_data=request.data)
-        return Response(address_serializer.data, status=status.HTTP_200_OK)
-    else:
-        return Response(address_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-def get_address(request, pk):
-    if not request.user.is_staff and request.user.employee is None:
-        query = request.user.cliente.address
-    else:
-        query = Address.objects
-
-    try:
-        address = query.get(pk=pk)
-        serializer = AddressSerializer(address, many=False)
-        return Response(serializer.data)
-    except Address.DoesNotExist:
-        return Response({'status': 'Address does not exists'}, status=status.HTTP_404_NOT_FOUND)
-
-
-@api_view(['GET', 'PUT', 'PATCH'])
-@authentication_classes([SessionAuthentication, BasicAuthentication])
-@permission_classes([IsAuthenticated])
-def address_data(request, pk):
-    if request.method == 'GET':
-        return get_address(request, pk)
-    elif request.method == 'PUT' or request.method == 'PATCH':
-        return update_address(request, pk)
     else:
         return Response({'status': 'Method not allowed'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
